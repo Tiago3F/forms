@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
   ]
 })
 export class DataFormModule { }
