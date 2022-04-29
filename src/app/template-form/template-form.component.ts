@@ -17,6 +17,16 @@ export class TemplateFormComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  verificaValidTouched(campo: { valid: any; touched: any; }) {
+    return !campo.valid && campo.touched
+  }
+
+  aplicaCssErro(campo: { valid: any; touched: any; }) {
+    return {
+    'has-error': this.verificaValidTouched(campo),
+    'has-feedback': this.verificaValidTouched(campo) }
+  }
+
   onSubmit(form: any){
      console.log(form)
      console.log(this.usuario)
