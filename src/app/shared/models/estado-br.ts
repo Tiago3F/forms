@@ -1,6 +1,6 @@
 export interface EstadoBr {
 
-  id: string,
+  id: number,
   sigla: string,
   nome: string
 

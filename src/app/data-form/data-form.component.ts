@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-data-form',
@@ -14,17 +15,18 @@ import { map } from 'rxjs/operators';
 export class DataFormComponent implements OnInit {
 
   formulario!: FormGroup;
-  estados!: EstadoBr[]
+  // estados!: EstadoBr[]
+  estados!: Observable<EstadoBr []>
 
   constructor(private formBuilder: FormBuilder, private http: HttpClient, private dropDownService: DropdownService, private cepService: ConsultaCepService) { }
 
   ngOnInit(): void {
 
-    this.estados = [];
-    this.dropDownService.getEstadosBr().subscribe((res: EstadoBr) => {
-      this.estados.push(res)
-      console.log(res)
-    })
+    this.estados = this.dropDownService.getEstadosBr()
+
+
+    // this.dropDownService.getEstadosBr().subscribe(dados => {this.estados = dados;  console.log(dados)})
+
     // this.formulario = new FormGroup({
     //   nome: new FormControl(null),
     //   email: new FormControl(null)
@@ -153,3 +155,7 @@ export class DataFormComponent implements OnInit {
   }
 
 }
+function dados(dados: any) {
+  throw new Error('Function not implemented.');
+}
+
