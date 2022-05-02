@@ -1,3 +1,4 @@
+import { ConsultaCepService } from './../shared/services/consulta-cep.service';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -14,7 +15,7 @@ export class TemplateFormComponent implements OnInit {
     email: null
   }
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private cepService: ConsultaCepService) { }
 
   ngOnInit(): void {
   }
@@ -34,28 +35,20 @@ export class TemplateFormComponent implements OnInit {
     console.log(formulario)
     // console.log(this.usuario)
     this.http.post('https://httpbin.org/post', JSON.stringify(formulario.value))
-    .pipe(map(dados =>  dados))
-    .subscribe(dados => {
-      console.log(dados)
-      formulario.form.reset()
-    })
+      .pipe(map(dados => dados))
+      .subscribe(dados => {
+        console.log(dados)
+        formulario.form.reset()
+      })
   }
 
   consultaCEP(cep: any, form: any) {
     cep = cep.replace(/\D/g, '');
 
     if (cep != null && cep !== '') {
-      const validacep = /^[0-9]{8}$/;
-
-      if (validacep.test(cep)) {
-
-        this.resetaDadosForm(form)
-
-        this.http.get(`//viacep.com.br/ws/${cep}/json/`)
-          .pipe(map((dados: any) => dados))
-          .subscribe(dados => this.populaDadosForm(dados, form));
-      }
+      this.cepService.consultaCEP(cep)?.subscribe(dados => this.populaDadosForm(dados, form));
     }
+
   }
 
   populaDadosForm(dados: any, formulario: any) {

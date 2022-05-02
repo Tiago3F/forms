@@ -1,5 +1,6 @@
+import { ConsultaCepService } from './../shared/services/consulta-cep.service';
 import { EstadoBr } from './../shared/models/estado-br';
-import { DropdownService } from './../shared/service/dropdown.service';
+import { DropdownService } from '../shared/services/dropdown.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -15,7 +16,7 @@ export class DataFormComponent implements OnInit {
   formulario!: FormGroup;
   estados!: EstadoBr[]
 
-  constructor(private formBuilder: FormBuilder, private http: HttpClient, private dropDownService: DropdownService) { }
+  constructor(private formBuilder: FormBuilder, private http: HttpClient, private dropDownService: DropdownService, private cepService: ConsultaCepService) { }
 
   ngOnInit(): void {
 
@@ -102,23 +103,13 @@ export class DataFormComponent implements OnInit {
 
   consultaCEP() {
 
-    let cep = this.formulario.get('endereco.cep')?.value
+    const cep = this.formulario.get('endereco.cep')?.value
 
-    cep = cep.replace(/\D/g, '');
-
-    if (cep != null && cep !== '') {
-      const validacep = /^[0-9]{8}$/;
-
-      if (validacep.test(cep)) {
-
-        this.resetaDadosForm()
-
-        this.http.get(`//viacep.com.br/ws/${cep}/json/`)
-          .pipe(map((dados: any) => dados))
-          .subscribe(dados => this.populaDadosForm(dados));
-      }
+      if (cep != null && cep !== '') {
+      this.cepService.consultaCEP(cep)?.subscribe(dados => this.populaDadosForm(dados));
     }
   }
+
 
   populaDadosForm(dados: any) {
     // formulario.setValue({
