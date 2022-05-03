@@ -16,7 +16,10 @@ export class DataFormComponent implements OnInit {
 
   formulario!: FormGroup;
   // estados!: EstadoBr[]
-  estados!: Observable<EstadoBr []>
+  estados!: Observable<EstadoBr[]>
+  cargos!: any[];
+  tecnologias!: any[];
+  newsletterOp!: any[];
 
   constructor(private formBuilder: FormBuilder, private http: HttpClient, private dropDownService: DropdownService, private cepService: ConsultaCepService) { }
 
@@ -24,6 +27,11 @@ export class DataFormComponent implements OnInit {
 
     this.estados = this.dropDownService.getEstadosBr()
 
+    this.cargos = this.dropDownService.getCargos()
+
+    this.tecnologias = this.dropDownService.getTecnologias()
+
+    this.newsletterOp = this.dropDownService.getNewsletter()
 
     // this.dropDownService.getEstadosBr().subscribe(dados => {this.estados = dados;  console.log(dados)})
 
@@ -44,7 +52,11 @@ export class DataFormComponent implements OnInit {
         bairro: [null, Validators.required],
         cidade: [null, Validators.required],
         estado: [null, Validators.required],
-      })
+      }),
+
+      cargo: [null],
+      tecnologias: [null],
+      newsletter: ['s'],
     })
   }
 
@@ -107,7 +119,7 @@ export class DataFormComponent implements OnInit {
 
     const cep = this.formulario.get('endereco.cep')?.value
 
-      if (cep != null && cep !== '') {
+    if (cep != null && cep !== '') {
       this.cepService.consultaCEP(cep)?.subscribe(dados => this.populaDadosForm(dados));
     }
   }
@@ -154,8 +166,20 @@ export class DataFormComponent implements OnInit {
     })
   }
 
+  setarCargo() {
+    const cargo = {nome: 'Dev', nivel: 'Pleno', desc: 'Dev Pl'};
+    this.formulario.get('cargo')?.setValue(cargo)
+  }
+
+  compararCargos(obj1: any, obj2: any) {
+    return obj1 && obj2 ? (obj1.nome === obj2.nome && obj1.nivel === obj2.nivel) : obj1 === obj2
+  }
+
+  setarTecnologias() {
+    this.formulario.get('tecnologias')?.setValue(['java', 'javascript', 'php'])
+  }
+
 }
-function dados(dados: any) {
-  throw new Error('Function not implemented.');
-}
+
+
 
